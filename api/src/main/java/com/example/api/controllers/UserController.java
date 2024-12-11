@@ -13,7 +13,7 @@ import com.example.api.services.UserService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/api/personas")
+@RequestMapping("/api/usuarios")
 public class UserController {
 
     @Autowired
