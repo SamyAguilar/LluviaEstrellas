@@ -25,9 +25,9 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    // Crear nueva persona
-    public User createUsuarios(User usuario) {
-        return userRepository.save(usuario);
+    // Crear nuevo usuario
+    public User createUsuarios(User User) {
+        return userRepository.save(User);
     }
 
     // Actualizar una persona
