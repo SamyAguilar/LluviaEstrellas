@@ -10,13 +10,13 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/api/user")
+@RequestMapping("/apiusuario/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("/lista")
     public List<User> getAllUsuarios() {
         return userService.getAllUsuarios();
     }

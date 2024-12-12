@@ -11,6 +11,8 @@ public class User {
     private String nombre;
     private String apellido;
     private int edad;
+    private boolean esAdmin;
+    private String password;
 
     // Getters y setters
     public Long getId() {
@@ -43,5 +45,21 @@ public class User {
 
     public void setEdad(int edad) {
         this.edad = edad;
+    }
+
+    public boolean isEsAdmin() {
+        return esAdmin;
+    }
+
+    public void setEsAdmin(boolean esAdmin) {
+        this.esAdmin = esAdmin;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
