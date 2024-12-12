@@ -48,4 +48,11 @@ public class UserService {
         }
         return false;
     }
+
+
+
+    public Optional<User> autenticar(String nombre, String password) {
+        return userRepository.findByName(nombre)
+                .filter(u -> u.getPassword().equals(password));
+    }
 }
