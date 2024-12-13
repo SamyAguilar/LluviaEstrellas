@@ -21,15 +21,10 @@ public class JuegoController {
     public List<Palabra> getPalabras() {
         return palabraService.getAllPalabras();
     }
-    /*//agregar palabras
+    //agregar palabras
     @PostMapping("/palabras")
     public Palabra addPalabra(@RequestBody Palabra palabra) {
         return palabraService.addPalabra(palabra);
-    }*/
-    @PostMapping("/palabras")
-    public ResponseEntity<Palabra> addPalabra(@RequestBody Palabra palabra) {
-        Palabra nuevaPalabra = palabraService.addPalabra(palabra);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaPalabra);  // Retorna la nueva palabra creada
     }
 
     // eliminar palabras
