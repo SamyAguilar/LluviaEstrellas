@@ -12,17 +12,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity (enable it in production)
-                .cors(cors -> cors.configure(http)) // Habilita CORS
-
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll() // Allow login endpoint
-                        .anyRequest().authenticated() // Secure all other endpoints
+                        .requestMatchers("/register", "/users","/login").permitAll() // Rutas públicas
+                        //.requestMatchers("/apis/juego/palabras").hasRole("ADMIN") // Solo accesible para ADMIN
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Filtro JWT
 
         return http.build();
     }
