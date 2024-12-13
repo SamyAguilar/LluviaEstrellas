@@ -6,9 +6,14 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+//<<<<<<< login
     <div>
     <Login />
   </div>
+//=======
+    <>
+    </>
+//>>>>>>> Front
   )
 }
 
