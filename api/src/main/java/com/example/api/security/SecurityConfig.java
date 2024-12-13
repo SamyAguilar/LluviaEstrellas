@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/users","/login").permitAll() // Rutas públicas
-                        //.requestMatchers("/apis/juego/palabras").hasRole("ADMIN") // Solo accesible para ADMIN
+                        .requestMatchers("/apis/juego/palabras").hasRole("ADMIN") // Solo accesible para ADMIN
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Filtro JWT
