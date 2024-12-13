@@ -10,8 +10,7 @@ public class User {
     private Long id;
     private String nombre;
     private String apellido;
-    private int edad;
-    private boolean esAdmin;
+   private boolean esAdmin;
     private String password;
 
     // Getters y setters
@@ -39,13 +38,7 @@ public class User {
         this.apellido = apellido;
     }
 
-    public int getEdad() {
-        return edad;
-    }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
 
     public boolean isEsAdmin() {
         return esAdmin;

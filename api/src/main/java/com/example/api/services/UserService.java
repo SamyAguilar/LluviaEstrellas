@@ -1,9 +1,9 @@
 package com.example.api.services;
 
-
 import com.example.api.models.User;
 import com.example.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +15,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+  /*  @Autowired
+    private PasswordEncoder passwordEncoder;*/
+
     // Listar todas las personas
     public List<User> getAllUsuarios() {
         return userRepository.findAll();
@@ -25,22 +28,27 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    // Crear nuevo usuario
-    public User createUsuarios(User User) {
-        return userRepository.save(User);
+    // Crear nuevo usuario (con contraseña cifrada)
+    public User createUsuarios(User user) {
+        System.out.println("Creando usuario: " + user);
+        // Cifrar la contraseña antes de guardarla
+        return userRepository.save(user);
     }
 
-    // Actualizar una persona
+    /*// Actualizar usuario
     public Optional<User> updateUsuarios(Long id, User userDetails) {
         return userRepository.findById(id).map(user -> {
             user.setNombre(userDetails.getNombre());
             user.setApellido(userDetails.getApellido());
-            user.setEdad(userDetails.getEdad());
+            if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+                // Actualizar la contraseña si se proporciona
+                user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+            }
             return userRepository.save(user);
         });
-    }
+    }*/
 
-    // Eliminar una persona
+    // Eliminar un usuario
     public boolean deleteUsuario(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
@@ -48,11 +56,15 @@ public class UserService {
         }
         return false;
     }
+    // Buscar un usuario por su nombre de usuario
+    public User getUserByUsername(String username) {
 
-
-
-    public Optional<User> autenticar(String nombre, String password) {
-        return userRepository.findByName(nombre)
-                .filter(u -> u.getPassword().equals(password));
+        return userRepository.findByNombre(username).orElse(null); // Devuelve null si no encuentra el usuario
     }
+
+    /*// Autenticación del usuario
+    public Optional<User> autenticar(String nombre, String password) {
+        return userRepository.findByNombre(nombre)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
+    }*/
 }
