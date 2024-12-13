@@ -22,18 +22,26 @@ public class JwtUtil {
     }*/
     /// mejora pendiente en generar token en JWTUTIL
     public static String generateToken(String username, String role) {
-        String token = Jwts.builder()
-                .setSubject(username)
-                .claim("role", role) // Aquí se añade el rol al token
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+        try {
+            // Genera el token JWT
+            String token = Jwts.builder()
+                    .setSubject(username) // Establece el sujeto (usuario)
+                    .claim("role", role) // Añade el rol al token
+                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Establece la fecha de expiración
+                    .signWith(key, SignatureAlgorithm.HS512) // Firma el token con la clave y algoritmo
+                    .compact(); // Compacta el token en una cadena
 
-        // Imprimir el token en la consola
-        System.out.println("Token generado: " + token);
+            // Imprimir el token en la consola para depuración (opcional)
+            System.out.println("Token generado: " + token);
 
-        return token;
+            return token; // Retorna el token generado
+        } catch (Exception e) {
+            // Manejo de excepciones en caso de error al generar el token
+            System.err.println("Error al generar el token: " + e.getMessage());
+            return null; // Retorna null si hay un error
+        }
     }
+
 
 
     public static String extractUsername(String token) {
