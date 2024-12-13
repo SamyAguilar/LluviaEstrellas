@@ -4,13 +4,14 @@ package com.example.api.controllers;
 import com.example.api.models.Palabra;
 import com.example.api.services.PalabraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/juego")
+@RequestMapping("/apis/juego")
 public class JuegoController {
 
     @Autowired
@@ -20,11 +21,17 @@ public class JuegoController {
     public List<Palabra> getPalabras() {
         return palabraService.getAllPalabras();
     }
-    //agregar palabras
+    /*//agregar palabras
     @PostMapping("/palabras")
     public Palabra addPalabra(@RequestBody Palabra palabra) {
         return palabraService.addPalabra(palabra);
+    }*/
+    @PostMapping("/palabras")
+    public ResponseEntity<Palabra> addPalabra(@RequestBody Palabra palabra) {
+        Palabra nuevaPalabra = palabraService.addPalabra(palabra);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaPalabra);  // Retorna la nueva palabra creada
     }
+
     // eliminar palabras
     @DeleteMapping("/palabras/{id}")
     public ResponseEntity<Void> deletePersona(@PathVariable Long id) {

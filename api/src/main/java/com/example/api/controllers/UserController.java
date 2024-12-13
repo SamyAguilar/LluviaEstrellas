@@ -1,3 +1,4 @@
+/*
 package com.example.api.controllers;
 
 import com.example.api.models.User;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/apiusuario/user")
+@RequestMapping("/apis/user")
 public class UserController {
 
     @Autowired
@@ -48,3 +49,4 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 }
+*/
