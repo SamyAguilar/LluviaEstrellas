@@ -73,6 +73,12 @@
 			<scope>provided</scope><!-- Cambiar a provided si se ejecuta en un contenedor -->
 		</dependency>
 
+		<!--Configuracion CORS para interfaz-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
