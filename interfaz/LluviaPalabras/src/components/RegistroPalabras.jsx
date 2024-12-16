@@ -15,7 +15,7 @@ const RegistroPalabras = () => {
   const cargarPalabras = async () => {
     try {
       const token = localStorage.getItem("token"); // Obtén el token desde el almacenamiento local
-      const response = await axios.get("http://localhost:8080/apis/juego/palabras", {
+      const response = await axios.get("http://localhost:8080/apis/juego/palabrasLista", {
         headers: {
           Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
         },
