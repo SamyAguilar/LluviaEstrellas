@@ -29,7 +29,7 @@ const InicioJuego = () => {
             fontSize: "16px",
             cursor: "pointer",
           }}
-          onClick={() => navigate("/ranking")}
+          onClick={() => navigate("/tabla-puntajes")}
         >
           Tabla de Puntajes
         </button>

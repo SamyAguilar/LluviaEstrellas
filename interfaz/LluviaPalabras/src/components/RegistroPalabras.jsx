@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./RegistroPalabras.css"; // Importa el archivo de estilos
 
 const RegistroPalabras = () => {
   const [palabras, setPalabras] = useState([]);
@@ -14,18 +15,20 @@ const RegistroPalabras = () => {
   // Obtener palabras del backend
   const cargarPalabras = async () => {
     try {
-      const token = localStorage.getItem("token"); // Obtén el token desde el almacenamiento local
-      const response = await axios.get("http://localhost:8080/apis/juego/palabrasLista", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
-        },
-      });
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/apis/juego/palabrasLista",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setPalabras(response.data);
     } catch (error) {
       console.error("Error al cargar las palabras:", error);
     }
   };
-  
 
   // Agregar nueva palabra
   const agregarPalabra = async () => {
@@ -33,7 +36,7 @@ const RegistroPalabras = () => {
       alert("Por favor, completa ambos campos.");
       return;
     }
-  
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -55,7 +58,6 @@ const RegistroPalabras = () => {
       console.error("Error al agregar la palabra:", error);
     }
   };
-  
 
   // Eliminar palabra
   const eliminarPalabra = async (id) => {
@@ -71,12 +73,11 @@ const RegistroPalabras = () => {
       console.error("Error al eliminar la palabra:", error);
     }
   };
-  
 
   return (
-    <div>
+    <div className="registro-container">
       <h1>Registro de Palabras</h1>
-      <div>
+      <div className="form-container">
         <input
           type="text"
           value={nuevaPalabra}
@@ -89,9 +90,11 @@ const RegistroPalabras = () => {
           onChange={(e) => setPuntos(e.target.value)}
           placeholder="Puntos"
         />
-        <button onClick={agregarPalabra}>Agregar</button>
+        <button onClick={agregarPalabra} className="btn-agregar">
+          Agregar
+        </button>
       </div>
-      <table>
+      <table className="tabla-palabras">
         <thead>
           <tr>
             <th>ID</th>
@@ -107,7 +110,12 @@ const RegistroPalabras = () => {
               <td>{palabra.palabra}</td>
               <td>{palabra.puntos}</td>
               <td>
-                <button onClick={() => eliminarPalabra(palabra.id)}>Eliminar</button>
+                <button
+                  onClick={() => eliminarPalabra(palabra.id)}
+                  className="btn-eliminar"
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
