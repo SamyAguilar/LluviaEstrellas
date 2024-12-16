@@ -46,6 +46,10 @@ const Login = () => {
     }
   };
 
+  const registrar = () => {
+    navigate("/usuarios");
+  };
+
   return (
     <div className="login-container">
       <div className="login-box">
@@ -80,6 +84,7 @@ const Login = () => {
           {error && <p className="error">{error}</p>}
           <button type="submit" className="login-button">Entrar</button>
         </form>
+        <button className="register-button" onClick={registrar}>Registrar</button>
       </div>
     </div>
   );

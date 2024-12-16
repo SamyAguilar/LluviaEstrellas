@@ -7,6 +7,7 @@ import InicioJuego from './components/InicioJuego';
 import Juego from "./components/Juego";
 import './index.css';
 import Ranking from './components/Ranking';
+import Usuarios from './components/Usuarios';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/inicio-juego" element={<InicioJuego />} />
         <Route path="/juego" element={<Juego />} />
         <Route path="/ranking" element={<Ranking/>}/>
+        <Route path="/usuarios" element={<Usuarios/>}/>
       </Routes>
     </Router>
   </React.StrictMode>

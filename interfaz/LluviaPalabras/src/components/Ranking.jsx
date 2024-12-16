@@ -1,7 +1,7 @@
 import { obtenerRanking } from "./Rankings";
 import { useState } from 'react';
 import { useEffect } from 'react';
-import "./Ranking.css";
+import "./ranking.css";
 
 function Ranking() {
    /// para los susarios
