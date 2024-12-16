@@ -27,8 +27,13 @@ public class UserService {
 
     // Crear nuevo usuario
     public User createUsuarios(User user) {
-        System.out.println("Creando usuario: " + user);
+        // Verificar si el usuario ya existe
+        if (userRepository.findByNombre(user.getNombre()).isPresent()) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso elija uno ."); // Lanza una excepción si el usuario ya existe
+        }
+
         // Cifrar la contraseña antes de guardarla si es necesario
+        System.out.println("Creando usuario: " + user);
         return userRepository.save(user);
     }
 

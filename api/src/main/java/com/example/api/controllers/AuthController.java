@@ -26,9 +26,15 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public User createUsuarios(@RequestBody User user) {
-        return userService.createUsuarios(user);
+    public ResponseEntity<?> createUsuarios(@RequestBody User user) {
+        try {
+            User createdUser = userService.createUsuarios(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage())); // Código 409 Conflict
+        }
     }
+
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsuarios() {
