@@ -1,0 +1,87 @@
+/* Aseguramos que el body ocupe toda la pantalla */
+body { 
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #261637, #0e2245);
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupar toda la pantalla verticalmente */
+  }
+  
+  .login-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3rem; /* Mayor padding para hacerlo más grande */
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+    text-align: center;
+    color: white;
+    width: 400px; /* Mayor ancho */
+  }
+  
+  .login-icon {
+    font-size: 4rem; /* Icono más grande */
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-icon {
+    width: 80px; /* Imagen de usuario más grande */
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+  }
+  
+  h1 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+  
+  .input-group {
+    margin-bottom: 2rem; /* Más espacio entre inputs */
+    text-align: left;
+  }
+  
+  .input-group label {
+    font-size: 1rem;
+    color: #ddd;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 0.8rem; /* Inputs más grandes */
+    border: none;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    outline: none;
+    font-size: 1rem;
+  }
+  
+  .login-button {
+    background: #2575fc;
+    color: white;
+    border: none;
+    padding: 1rem 2rem; /* Botón más grande */
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .login-button:hover {
+    background: #1a5cbf;
+  }
+  
+  .error {
+    color: #ff6961;
+    margin-bottom: 1.5rem;
+  }
+  

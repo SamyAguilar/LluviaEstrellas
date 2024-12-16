@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import "./Login.css"; // Importa los estilos
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -47,29 +48,39 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h1>Iniciar Sesión</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Usuario:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+      <div className="login-box">
+        <div className="login-icon">
+          {/* Imagen de usuario */}
+          <img src="https://via.placeholder.com/80" alt="User Icon" className="user-icon" />
         </div>
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p className="error">{error}</p>}
-        <button type="submit">Entrar</button>
-      </form>
+        <h1>Iniciar Sesión</h1>
+        <form onSubmit={handleLogin}>
+          <div className="input-group">
+            <label htmlFor="username">Usuario</label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Ingrese su usuario"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Ingrese su contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <p className="error">{error}</p>}
+          <button type="submit" className="login-button">Entrar</button>
+        </form>
+      </div>
     </div>
   );
 };
