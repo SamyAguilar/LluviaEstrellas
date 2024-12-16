@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import "./Juego.css";
 
 const Juego = () => {
@@ -8,6 +9,8 @@ const Juego = () => {
   const [puntos, setPuntos] = useState(0);
   const [input, setInput] = useState("");
   const [juegoTerminado, setJuegoTerminado] = useState(false);
+  
+  const navigate = useNavigate(); // Inicializar el hook
 
   useEffect(() => {
     cargarPalabras();
@@ -27,45 +30,41 @@ const Juego = () => {
   };
 
   const generarPosicionInicial = () => ({
-    x: Math.random() * 90 + 5, // Posición X aleatoria (5% - 95%)
-    y: 0, // Posición inicial Y (parte superior)
-    velocidad: Math.random() * 0.2 + 0.1 // Velocidad individual aleatoria
+    x: Math.random() * 90 + 5,
+    y: 0,
+    velocidad: Math.random() * 0.2 + 0.1
   });
 
   // Movimiento automático de las palabras
   useEffect(() => {
     if (juegoTerminado) return;
-  
+
     const intervalo = setInterval(() => {
       setPosiciones((prev) => {
         const nuevasPosiciones = prev.map((pos) => ({
           ...pos,
-          y: pos.y + pos.velocidad, // Usa velocidad individual
+          y: pos.y + pos.velocidad,
         }));
-  
-        // Verificar si alguna palabra alcanzó el suelo
+
         if (nuevasPosiciones.some((pos) => pos.y >= 100)) {
           clearInterval(intervalo);
           setJuegoTerminado(true);
-  
-          // Capturar el valor actualizado de puntos
           setPuntos((prevPuntos) => {
-            guardarPuntaje(prevPuntos); // Llamar a guardarPuntaje con el valor actualizado
-            return prevPuntos; // No modificar el puntaje aquí
+            guardarPuntaje(prevPuntos);
+            return prevPuntos;
           });
         }
-  
+
         return nuevasPosiciones;
       });
     }, 50);
-  
+
     return () => clearInterval(intervalo);
   }, [juegoTerminado]);
-  
 
   // Manejo del input del jugador
   const manejarInput = () => {
-    if (!input.trim() || juegoTerminado) return; // No hacer nada si el input está vacío o el juego terminó
+    if (!input.trim() || juegoTerminado) return;
 
     const index = palabras.findIndex((p) => p.palabra.toLowerCase() === input.toLowerCase());
     if (index !== -1) {
@@ -73,9 +72,9 @@ const Juego = () => {
       const palabraPuntos = palabras[index].puntos;
       let puntosGanados = 0;
 
-      if (posY < 33) puntosGanados = palabraPuntos; // Parte superior: puntaje completo
-      else if (posY < 66) puntosGanados = palabraPuntos * 0.75; // Mitad: 75%
-      else puntosGanados = palabraPuntos * 0.5; // Parte inferior: 50%
+      if (posY < 33) puntosGanados = palabraPuntos;
+      else if (posY < 66) puntosGanados = palabraPuntos * 0.75;
+      else puntosGanados = palabraPuntos * 0.5;
 
       setPuntos((prev) => prev + puntosGanados);
 
@@ -87,7 +86,7 @@ const Juego = () => {
       });
     }
 
-    setInput(""); // Limpiar input
+    setInput("");
   };
 
   // Guardar puntaje en el backend
@@ -97,12 +96,12 @@ const Juego = () => {
       console.error("Token no encontrado. No se puede guardar el puntaje.");
       return;
     }
-  
+
     try {
-      console.log("Puntaje final a guardar:", puntajeFinal); // Verificar puntaje antes de enviar
+      console.log("Puntaje final a guardar:", puntajeFinal);
       const response = await axios.put(
         "http://localhost:8080/puntaje",
-        puntajeFinal, // Enviar el puntaje final actualizado
+        puntajeFinal,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -122,8 +121,9 @@ const Juego = () => {
     cargarPalabras();
   };
 
+  // Función para salir del juego
   const salirJuego = () => {
-    window.location.reload(); // Recargar la página para reiniciar el estado
+    navigate("/inicio-juego"); // Redirigir a la página de inicio del juego
   };
 
   return (
