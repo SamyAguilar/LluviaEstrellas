@@ -12,10 +12,22 @@ function Ranking() {
 
   return (
     <>
-    <ul>
-      {ranking.map((user)=>
-      (<li>{user.name}</li>))}
-    </ul>
+    <table className="tabla-palabras">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Puntaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ranking.map((ranking) => (
+            <tr key={ranking.id}>
+              <td>{ranking.username}</td>
+              <td>{ranking.puntaje}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 }
