@@ -35,26 +35,33 @@ const Juego = () => {
   // Movimiento automático de las palabras
   useEffect(() => {
     if (juegoTerminado) return;
-
+  
     const intervalo = setInterval(() => {
       setPosiciones((prev) => {
         const nuevasPosiciones = prev.map((pos) => ({
           ...pos,
-          y: pos.y + pos.velocidad // Usa velocidad individual
+          y: pos.y + pos.velocidad, // Usa velocidad individual
         }));
-
+  
         // Verificar si alguna palabra alcanzó el suelo
         if (nuevasPosiciones.some((pos) => pos.y >= 100)) {
           clearInterval(intervalo);
           setJuegoTerminado(true);
+  
+          // Capturar el valor actualizado de puntos
+          setPuntos((prevPuntos) => {
+            guardarPuntaje(prevPuntos); // Llamar a guardarPuntaje con el valor actualizado
+            return prevPuntos; // No modificar el puntaje aquí
+          });
         }
-
+  
         return nuevasPosiciones;
       });
     }, 50);
-
+  
     return () => clearInterval(intervalo);
   }, [juegoTerminado]);
+  
 
   // Manejo del input del jugador
   const manejarInput = () => {
@@ -83,6 +90,32 @@ const Juego = () => {
     setInput(""); // Limpiar input
   };
 
+  // Guardar puntaje en el backend
+  const guardarPuntaje = async (puntajeFinal) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token no encontrado. No se puede guardar el puntaje.");
+      return;
+    }
+  
+    try {
+      console.log("Puntaje final a guardar:", puntajeFinal); // Verificar puntaje antes de enviar
+      const response = await axios.put(
+        "http://localhost:8080/puntaje",
+        puntajeFinal, // Enviar el puntaje final actualizado
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Puntaje guardado exitosamente:", response.data);
+    } catch (error) {
+      console.error("Error al guardar el puntaje:", error.response?.data || error.message);
+    }
+  };
+
   const reiniciarJuego = () => {
     setJuegoTerminado(false);
     setPuntos(0);
@@ -98,7 +131,7 @@ const Juego = () => {
       {juegoTerminado ? (
         <div className="juego-mensaje">
           <h1>¡Perdiste!</h1>
-          <p>Una palabra alcanzó el suelo. Inténtalo de nuevo.</p>
+          <p>Tu puntaje final es: {puntos}</p>
           <div className="juego-botones">
             <button className="juego-boton" onClick={reiniciarJuego}>Intentarlo de nuevo</button>
             <button className="juego-boton" onClick={salirJuego}>Salir</button>
