@@ -83,12 +83,24 @@ const Juego = () => {
     setInput(""); // Limpiar input
   };
 
+  const reiniciarJuego = () => {
+    setJuegoTerminado(false);
+    setPuntos(0);
+    cargarPalabras();
+  };
+
+  const salirJuego = () => {
+    window.location.href = "/"; // Redirigir a la página principal o cerrar el juego
+  };
+
   return (
     <div className="juego-container">
       {juegoTerminado ? (
         <div className="juego-mensaje">
           <h1>¡Perdiste!</h1>
           <p>Una palabra alcanzó el suelo. Inténtalo de nuevo.</p>
+          <button className="juego-boton" onClick={reiniciarJuego}>Intentarlo de nuevo</button>
+          <button className="juego-boton" onClick={salirJuego}>Salir</button>
         </div>
       ) : (
         <>

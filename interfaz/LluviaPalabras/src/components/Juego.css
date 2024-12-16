@@ -72,3 +72,54 @@
     color: #ffffff;
   }
   
+  .juego-mensaje {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  }
+  
+  .juego-mensaje h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #ff4c4c;
+  }
+  
+  .juego-mensaje p {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+  }
+  
+  .juego-boton {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #37626e;
+    color: #e8edf8;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .juego-boton:hover {
+    background-color: #21a1f1;
+  }
+  
+  .juego-boton.salir {
+    background-color: #ff4c4c;
+    color: white;
+  }
+  
+  .juego-boton.salir:hover {
+    background-color: #e53935;
+  }
+  
