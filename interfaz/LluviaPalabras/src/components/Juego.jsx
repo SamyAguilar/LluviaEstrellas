@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 import "./Juego.css";
 
 const Juego = () => {
   const [palabras, setPalabras] = useState([]);
-  const [posiciones, setPosiciones] = useState([]);
+  const [palabraActual, setPalabraActual] = useState(null);
+  const [posicion, setPosicion] = useState({ x: 50, y: 0, velocidad: 0.1 });
   const [puntos, setPuntos] = useState(0);
   const [input, setInput] = useState("");
   const [juegoTerminado, setJuegoTerminado] = useState(false);
-  
-  const navigate = useNavigate(); // Inicializar el hook
+  const [errorCargandoPalabras, setErrorCargandoPalabras] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     cargarPalabras();
@@ -18,78 +20,87 @@ const Juego = () => {
 
   // Cargar palabras desde la API
   const cargarPalabras = async () => {
-    const response = await axios.get("http://localhost:8080/apis/juego/palabrasLista");
-    setPalabras(response.data);
-    inicializarPosiciones(response.data);
+    try {
+      const response = await axios.get("http://localhost:8080/apis/juego/palabrasLista");
+      setPalabras(response.data);
+      if (response.data.length > 0) {
+        iniciarPalabra(response.data[0]);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Error en la respuesta del servidor:", error.response.data);
+        setErrorCargandoPalabras("Error al cargar las palabras: " + error.response.data);
+      } else if (error.request) {
+        console.error("No se recibió respuesta del servidor:", error.request);
+        setErrorCargandoPalabras("No se recibió respuesta del servidor.");
+      } else {
+        console.error("Error:", error.message);
+        setErrorCargandoPalabras("Error al realizar la solicitud: " + error.message);
+      }
+    }
   };
 
-  // Inicializar posiciones iniciales
-  const inicializarPosiciones = (palabras) => {
-    const posicionesIniciales = palabras.map(() => generarPosicionInicial());
-    setPosiciones(posicionesIniciales);
+  // Inicializar la primera palabra
+  const iniciarPalabra = (palabra) => {
+    setPalabraActual(palabra);
+    setPosicion({ x: Math.random() * 90 + 5, y: 0, velocidad: 1 });
   };
 
-  const generarPosicionInicial = () => ({
-    x: Math.random() * 90 + 5,
-    y: 0,
-    velocidad: Math.random() * 0.2 + 0.1
-  });
-
-  // Movimiento automático de las palabras
+  // Movimiento automático de la palabra actual
   useEffect(() => {
-    if (juegoTerminado) return;
+    if (juegoTerminado || !palabraActual) return;
 
     const intervalo = setInterval(() => {
-      setPosiciones((prev) => {
-        const nuevasPosiciones = prev.map((pos) => ({
-          ...pos,
-          y: pos.y + pos.velocidad,
-        }));
+      setPosicion((prev) => {
+        const nuevaY = prev.y + prev.velocidad;
 
-        if (nuevasPosiciones.some((pos) => pos.y >= 100)) {
+        if (nuevaY >= 100) {
           clearInterval(intervalo);
-          setJuegoTerminado(true);
-          setPuntos((prevPuntos) => {
-            guardarPuntaje(prevPuntos);
-            return prevPuntos;
-          });
+          setJuegoTerminado(true); // Finaliza el juego
         }
 
-        return nuevasPosiciones;
+        return { ...prev, y: nuevaY };
       });
     }, 50);
 
     return () => clearInterval(intervalo);
-  }, [juegoTerminado]);
+  }, [juegoTerminado, palabraActual]);
 
   // Manejo del input del jugador
   const manejarInput = () => {
-    if (!input.trim() || juegoTerminado) return;
+    if (!input.trim() || juegoTerminado || !palabraActual) return;
 
-    const index = palabras.findIndex((p) => p.palabra.toLowerCase() === input.toLowerCase());
-    if (index !== -1) {
-      const posY = posiciones[index].y;
-      const palabraPuntos = palabras[index].puntos;
+    if (palabraActual.palabra.toLowerCase() === input.toLowerCase()) {
+      const palabraPuntos = palabraActual.puntos;
       let puntosGanados = 0;
 
-      if (posY < 33) puntosGanados = palabraPuntos;
-      else if (posY < 66) puntosGanados = palabraPuntos * 0.75;
+      if (posicion.y < 33) puntosGanados = palabraPuntos;
+      else if (posicion.y < 66) puntosGanados = palabraPuntos * 0.75;
       else puntosGanados = palabraPuntos * 0.5;
+
+      // Redondear los puntos ganados a un entero
+      puntosGanados = Math.round(puntosGanados);
 
       setPuntos((prev) => prev + puntosGanados);
 
-      // Regenerar la palabra eliminada
-      setPosiciones((prev) => {
-        const nuevasPosiciones = [...prev];
-        nuevasPosiciones[index] = generarPosicionInicial();
-        return nuevasPosiciones;
+      // Incrementar la velocidad progresivamente con cada acierto
+      const nuevaVelocidad = Math.min(posicion.velocidad + 0.1, 2.0); // Velocidad máxima de 2.0
+      console.log(`Nueva velocidad: ${nuevaVelocidad}`);
+
+      // Cambiar a una nueva palabra
+      const siguientePalabra = palabras[Math.floor(Math.random() * palabras.length)];
+      setPalabraActual(siguientePalabra);
+      setPosicion({
+        x: Math.random() * 90 + 5,
+        y: 0,
+        velocidad: nuevaVelocidad, // Aplicar la nueva velocidad
       });
     }
 
     setInput("");
   };
 
-  // Guardar puntaje en el backend
+  // Guardar puntaje al finalizar el juego
   const guardarPuntaje = async (puntajeFinal) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -99,7 +110,8 @@ const Juego = () => {
 
     try {
       console.log("Puntaje final a guardar:", puntajeFinal);
-      const response = await axios.put(
+
+      await axios.put(
         "http://localhost:8080/puntaje",
         puntajeFinal,
         {
@@ -109,7 +121,8 @@ const Juego = () => {
           },
         }
       );
-      console.log("Puntaje guardado exitosamente:", response.data);
+
+      console.log("Puntaje guardado exitosamente");
     } catch (error) {
       console.error("Error al guardar el puntaje:", error.response?.data || error.message);
     }
@@ -121,38 +134,49 @@ const Juego = () => {
     cargarPalabras();
   };
 
-  // Función para salir del juego
   const salirJuego = () => {
-    navigate("/inicio-juego"); // Redirigir a la página de inicio del juego
+    navigate("/inicio-juego");
   };
+
+  // Guardar puntaje cuando el juego termine
+  useEffect(() => {
+    if (juegoTerminado) {
+      guardarPuntaje(Math.round(puntos));
+    }
+  }, [juegoTerminado, puntos]);
 
   return (
     <div className="juego-container">
+      {errorCargandoPalabras && <div className="error-message">{errorCargandoPalabras}</div>}
+
       {juegoTerminado ? (
         <div className="juego-mensaje">
           <h1>¡Perdiste!</h1>
           <p>Tu puntaje final es: {puntos}</p>
           <div className="juego-botones">
-            <button className="juego-boton" onClick={reiniciarJuego}>Intentarlo de nuevo</button>
-            <button className="juego-boton" onClick={salirJuego}>Salir</button>
+            <button className="juego-boton" onClick={reiniciarJuego}>
+              Intentarlo de nuevo
+            </button>
+            <button className="juego-boton" onClick={salirJuego}>
+              Salir
+            </button>
           </div>
         </div>
       ) : (
         <>
           <h1 className="juego-puntos">Puntos: {puntos}</h1>
           <div id="juego" className="juego-area">
-            {posiciones.map((pos, index) => (
+            {palabraActual && (
               <div
-                key={index}
                 className="juego-palabra"
                 style={{
-                  top: `${pos.y}%`,
-                  left: `${pos.x}%`,
+                  top: `${posicion.y}%`,
+                  left: `${posicion.x}%`,
                 }}
               >
-                {palabras[index]?.palabra}
+                {palabraActual.palabra}
               </div>
-            ))}
+            )}
           </div>
           <input
             type="text"
