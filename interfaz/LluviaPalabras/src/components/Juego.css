@@ -1,0 +1,74 @@
+/* Juego.css */
+.juego-container {
+    font-family: 'Arial, sans-serif';
+    text-align: center;
+    background-color: #282c34;
+    color: #ffffff;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .juego-puntos {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .juego-area {
+    position: relative;
+    width: 90%;
+    height: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 4px solid #61dafb;
+    background-color: #20232a;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .juego-palabra {
+    position: absolute;
+    font-size: 1.2rem;
+    color: #61dafb;
+    font-weight: bold;
+    transition: top 0.5s linear;
+  }
+  
+  .juego-input {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 2px solid #61dafb;
+    outline: none;
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  .juego-mensaje {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  }
+  
+  .juego-mensaje h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #ff4c4c;
+  }
+  
+  .juego-mensaje p {
+    font-size: 1.2rem;
+    color: #ffffff;
+  }
+  

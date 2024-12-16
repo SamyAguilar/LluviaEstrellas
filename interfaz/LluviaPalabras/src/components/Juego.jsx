@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./Juego.css";
 
 const Juego = () => {
   const [palabras, setPalabras] = useState([]);
   const [posiciones, setPosiciones] = useState([]);
   const [puntos, setPuntos] = useState(0);
   const [input, setInput] = useState("");
+  const [juegoTerminado, setJuegoTerminado] = useState(false);
 
   useEffect(() => {
     cargarPalabras();
@@ -13,56 +15,53 @@ const Juego = () => {
 
   // Cargar palabras desde la API
   const cargarPalabras = async () => {
-    console.log(localStorage.getItem("token"));
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No se encontró el token en el almacenamiento local");
-
-      const response = await axios.get("http://localhost:8080/apis/juego/palabras", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setPalabras(response.data);
-      inicializarPosiciones(response.data.length);
-    } catch (error) {
-      console.error("Error al cargar las palabras:", error);
-      alert("No se pudieron cargar las palabras. Verifique su conexión o token.");
-    }
+    const response = await axios.get("http://localhost:8080/apis/juego/palabrasLista");
+    setPalabras(response.data);
+    inicializarPosiciones(response.data);
   };
 
   // Inicializar posiciones iniciales
-  const inicializarPosiciones = (cantidad) => {
-    const posicionesIniciales = Array.from({ length: cantidad }, () => ({
-      x: Math.random() * 90 + 5, // Posición X aleatoria (5% - 95%)
-      y: 0, // Posición inicial Y (parte superior)
-    }));
+  const inicializarPosiciones = (palabras) => {
+    const posicionesIniciales = palabras.map(() => generarPosicionInicial());
     setPosiciones(posicionesIniciales);
   };
 
+  const generarPosicionInicial = () => ({
+    x: Math.random() * 90 + 5, // Posición X aleatoria (5% - 95%)
+    y: 0, // Posición inicial Y (parte superior)
+    velocidad: Math.random() * 0.2 + 0.1 // Velocidad individual aleatoria
+  });
+
   // Movimiento automático de las palabras
   useEffect(() => {
-    const velocidad = Math.max(500 - puntos, 200); // Velocidad disminuye con más puntos, mínimo 200ms
-    const intervalo = setInterval(() => {
-      setPosiciones((prev) =>
-        prev.map((pos) => ({
-          ...pos,
-          y: pos.y + 1, // Incrementar posición Y para simular caída
-        }))
-      );
-    }, velocidad);
+    if (juegoTerminado) return;
 
-    return () => clearInterval(intervalo); // Limpiar intervalo al desmontar
-  }, [puntos]);
+    const intervalo = setInterval(() => {
+      setPosiciones((prev) => {
+        const nuevasPosiciones = prev.map((pos) => ({
+          ...pos,
+          y: pos.y + pos.velocidad // Usa velocidad individual
+        }));
+
+        // Verificar si alguna palabra alcanzó el suelo
+        if (nuevasPosiciones.some((pos) => pos.y >= 100)) {
+          clearInterval(intervalo);
+          setJuegoTerminado(true);
+        }
+
+        return nuevasPosiciones;
+      });
+    }, 50);
+
+    return () => clearInterval(intervalo);
+  }, [juegoTerminado]);
 
   // Manejo del input del jugador
   const manejarInput = () => {
-    if (!input.trim()) return; // No hacer nada si el input está vacío
+    if (!input.trim() || juegoTerminado) return; // No hacer nada si el input está vacío o el juego terminó
 
     const index = palabras.findIndex((p) => p.palabra.toLowerCase() === input.toLowerCase());
     if (index !== -1) {
-      // Calcular puntaje según posición
       const posY = posiciones[index].y;
       const palabraPuntos = palabras[index].puntos;
       let puntosGanados = 0;
@@ -73,66 +72,53 @@ const Juego = () => {
 
       setPuntos((prev) => prev + puntosGanados);
 
-      // Eliminar palabra de la pantalla
-      setPalabras((prev) => prev.filter((_, i) => i !== index));
-      setPosiciones((prev) => prev.filter((_, i) => i !== index));
+      // Regenerar la palabra eliminada
+      setPosiciones((prev) => {
+        const nuevasPosiciones = [...prev];
+        nuevasPosiciones[index] = generarPosicionInicial();
+        return nuevasPosiciones;
+      });
     }
 
     setInput(""); // Limpiar input
   };
 
-  // Manejar palabras que salen de la pantalla
-  useEffect(() => {
-    const palabrasFuera = posiciones.filter((pos) => pos.y >= 100);
-
-    if (palabrasFuera.length > 0) {
-      palabrasFuera.forEach((_, index) => {
-        const palabraPuntos = palabras[index]?.puntos || 0; // Manejo seguro si palabras[index] es undefined
-        setPuntos((prev) => prev - palabraPuntos * 0.5); // Penalización
-      });
-
-      setPalabras((prev) => prev.filter((_, i) => posiciones[i].y < 100));
-      setPosiciones((prev) => prev.filter((pos) => pos.y < 100));
-    }
-  }, [posiciones]);
-
   return (
-    <div>
-      <h1>Puntos: {puntos}</h1>
-      <div
-        id="juego"
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "500px",
-          overflow: "hidden",
-          border: "2px solid black",
-          backgroundColor: "#f0f0f0",
-        }}
-      >
-        {posiciones.map((pos, index) => (
-          <div
-            key={index}
-            style={{
-              position: "absolute",
-              top: `${pos.y}%`,
-              left: `${pos.x}%`,
-              fontSize: "18px",
-            }}
-          >
-            {palabras[index]?.palabra}
+    <div className="juego-container">
+      {juegoTerminado ? (
+        <div className="juego-mensaje">
+          <h1>¡Perdiste!</h1>
+          <p>Una palabra alcanzó el suelo. Inténtalo de nuevo.</p>
+        </div>
+      ) : (
+        <>
+          <h1 className="juego-puntos">Puntos: {puntos}</h1>
+          <div id="juego" className="juego-area">
+            {posiciones.map((pos, index) => (
+              <div
+                key={index}
+                className="juego-palabra"
+                style={{
+                  top: `${pos.y}%`,
+                  left: `${pos.x}%`,
+                }}
+              >
+                {palabras[index]?.palabra}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <input
-        type="text"
-        placeholder="Escribe una palabra"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") manejarInput();
-        }}
-      />
+          <input
+            type="text"
+            placeholder="Escribe una palabra"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") manejarInput();
+            }}
+            className="juego-input"
+          />
+        </>
+      )}
     </div>
   );
 };

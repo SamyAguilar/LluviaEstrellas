@@ -1,4 +1,4 @@
-/* Aseguramos que el body ocupe toda la pantalla */
+/* Estilos para centrar todo el contenido del login */
 body { 
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,14 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(to bottom right, #261637, #0e2245);
-  }
-  
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ocupar toda la pantalla verticalmente */
+    background: linear-gradient(to bottom right, #261637, #45100e);
   }
   
   .login-box {
@@ -24,7 +17,8 @@ body {
     backdrop-filter: blur(15px);
     text-align: center;
     color: white;
-    width: 400px; /* Mayor ancho */
+    width: 100%; /* Asegura que ocupe toda la pantalla en dispositivos pequeños */
+    max-width: 400px; /* Tamaño máximo para pantallas más grandes */
   }
   
   .login-icon {
