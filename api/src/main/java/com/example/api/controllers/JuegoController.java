@@ -17,7 +17,7 @@ public class JuegoController {
     @Autowired
     private PalabraService palabraService;
     //listar palabras
-    @GetMapping("/palabras")
+    @GetMapping("/palabrasLista")
     public List<Palabra> getPalabras() {
         return palabraService.getAllPalabras();
     }

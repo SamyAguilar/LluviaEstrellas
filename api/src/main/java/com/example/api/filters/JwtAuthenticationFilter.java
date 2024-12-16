@@ -20,7 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         // No aplicar filtro a las rutas /register y /login
-        return "/register".equals(path) || "/login".equals(path) || "/users".equals(path);
+        return "/register".equals(path) || "/login".equals(path) || "/users".equals(path) || "/apis/juego/palabrasLista".equals(path);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/users","/login").permitAll() // Rutas públicas
+                        .requestMatchers("/register", "/users","/login","/apis/juego/palabrasLista").permitAll() // Rutas públicas
                         .requestMatchers("/apis/juego/palabras").hasRole("ADMIN") // Solo accesible para ADMIN
                         .anyRequest().authenticated()
                 )
