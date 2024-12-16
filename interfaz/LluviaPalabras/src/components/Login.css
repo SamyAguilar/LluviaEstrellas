@@ -68,9 +68,27 @@ body {
     font-size: 1.2rem;
     cursor: pointer;
     transition: background 0.3s ease;
+    width: 200px;
   }
   
   .login-button:hover {
+    background: #1a5cbf;
+  }
+
+  .register-button {
+    background: #2575fc;
+    color: white;
+    border: none;
+    padding: 1rem 2rem; /* Botón más grande */
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 8px;
+    width: 200px;
+  }
+
+  .register-button:hover {
     background: #1a5cbf;
   }
   

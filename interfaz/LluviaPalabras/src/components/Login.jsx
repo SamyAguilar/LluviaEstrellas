@@ -60,7 +60,7 @@ const Login = () => {
         <h1>Iniciar Sesión</h1>
         <form onSubmit={handleLogin}>
           <div className="input-group">
-            <label htmlFor="username">Usuario</label>
+            <label htmlFor="username" >Usuario</label>
             <input
               type="text"
               id="username"
