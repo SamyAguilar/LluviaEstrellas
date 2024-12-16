@@ -1,0 +1,49 @@
+/* Estilo para el contenedor del juego */
+.word-rain-game {
+    height: 100vh; /* Pantalla completa */
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #6a11cb, #2575fc);
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .game-container {
+    position: relative;
+    height: 60%;
+    width: 80%;
+    border: 2px solid white;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .falling-word {
+    position: absolute;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    animation: fall 5s linear infinite;
+  }
+  
+  @keyframes fall {
+    from {
+      top: 0;
+    }
+    to {
+      top: 100%;
+    }
+  }
+  
+  .word-input {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    width: 300px;
+    text-align: center;
+  }
+  
