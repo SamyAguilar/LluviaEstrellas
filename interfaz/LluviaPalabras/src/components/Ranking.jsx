@@ -1,6 +1,7 @@
 import { obtenerRanking } from "./Rankings";
 import { useState } from 'react';
 import { useEffect } from 'react';
+import "./Ranking.css";
 
 function Ranking() {
    /// para los susarios
@@ -10,9 +11,10 @@ function Ranking() {
      .then((data)=>setRanking(data))
    })
 
-  return (
-    <>
-    <table className="tabla-palabras">
+   return (
+    <div className="ranking-container"> 
+      <h1>Ranking</h1>
+      <table className="tabla-palabras">
         <thead>
           <tr>
             <th>Nombre</th>
@@ -20,16 +22,17 @@ function Ranking() {
           </tr>
         </thead>
         <tbody>
-          {ranking.map((ranking) => (
-            <tr key={ranking.id}>
-              <td>{ranking.username}</td>
-              <td>{ranking.puntaje}</td>
+          {ranking.map((item) => (
+            <tr key={item.id}>
+              <td>{item.username}</td>
+              <td>{item.puntaje}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
+
 }
 
 export default Ranking;

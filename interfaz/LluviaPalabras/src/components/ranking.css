@@ -1,0 +1,65 @@
+/* Estilo del cuerpo y fondo general */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom right, #2e3a59, #1f2833);
+    color: #fff;
+  }
+  
+  /* Contenedor principal del ranking */
+  .ranking-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 2rem auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+  }
+  
+  /* Título principal */
+  h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #fff;
+  }
+  
+  /* Tabla del ranking */
+  .tabla-palabras {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  /* Celdas y encabezado de la tabla */
+  .tabla-palabras th,
+  .tabla-palabras td {
+    padding: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Encabezados con fondo semitransparente */
+  .tabla-palabras th {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  /* Filas con efecto hover */
+  .tabla-palabras tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Responsividad para pantallas pequeñas */
+  @media (max-width: 600px) {
+    .ranking-container {
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+  
