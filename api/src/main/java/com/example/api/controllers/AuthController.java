@@ -1,11 +1,14 @@
 package com.example.api.controllers;
 
+import com.example.api.dto.UserScoreDTO;
 import com.example.api.models.User;
 import com.example.api.repositories.UserRepository;
 import com.example.api.security.JwtUtil;
 import com.example.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -58,8 +61,35 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
         }
     }
-    // Buscar un usuario por su nombre de usuario
-    public User getUserByUsername(String username) {
-        return userRepository.findByNombre(username).orElse(null); // Devuelve null si no encuentra el usuario
+
+    @PutMapping("/puntaje")
+    public ResponseEntity<User> actualizarPuntaje(@RequestHeader("Authorization") String authHeader, @RequestBody int nuevoPuntaje) {
+        // Verificar que el encabezado de autorización esté presente y tenga el formato correcto
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Manejo si no hay token
+        }
+
+        // Extraer el token sin "Bearer "
+        String token = authHeader.substring(7);
+
+        // Obtener el usuario actual desde el token
+        String username = JwtUtil.extractUsername(token);
+        User user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Manejo si el usuario es nulo
+        }
+
+        return userService.actualizarPuntaje(user.getId(), nuevoPuntaje)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<UserScoreDTO>> getRanking() {
+        List<UserScoreDTO> ranking = userService.getRanking();
+        return ResponseEntity.ok(ranking);
+    }
+
+
 }

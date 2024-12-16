@@ -6,6 +6,7 @@ import RegistroPalabras from './components/RegistroPalabras';
 import InicioJuego from './components/InicioJuego';
 import Juego from "./components/Juego";
 import './index.css';
+import Ranking from './components/Ranking';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/registro-palabras" element={<RegistroPalabras />} />
         <Route path="/inicio-juego" element={<InicioJuego />} />
         <Route path="/juego" element={<Juego />} />
+        <Route path="/ranking" element={<Ranking/>}/>
       </Routes>
     </Router>
   </React.StrictMode>
