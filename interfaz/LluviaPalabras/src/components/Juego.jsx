@@ -13,23 +13,11 @@ const Juego = () => {
 
   // Cargar palabras desde la API
   const cargarPalabras = async () => {
-    console.log(localStorage.getItem("token"));
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No se encontró el token en el almacenamiento local");
-
-      const response = await axios.get("http://localhost:8080/apis/juego/palabras", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+   
+      const response = await axios.get("http://localhost:8080/apis/juego/palabrasLista");
 
       setPalabras(response.data);
       inicializarPosiciones(response.data.length);
-    } catch (error) {
-      console.error("Error al cargar las palabras:", error);
-      alert("No se pudieron cargar las palabras. Verifique su conexión o token.");
-    }
   };
 
   // Inicializar posiciones iniciales

@@ -6,13 +6,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -20,7 +18,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         // No aplicar filtro a las rutas /register y /login
-        return "/register".equals(path) || "/login".equals(path) || "/users".equals(path) || "/apis/juego/palabrasLista".equals(path);
+        return "/register".equals(path) || "/login".equals(path) || "/users".equals(path) || "/apis/juego/palabrasLista".equals(path)
+                || "ranking".equals(path);
     }
 
     @Override
@@ -55,5 +54,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 }

@@ -10,10 +10,12 @@ public class User {
     private Long id;
     private String nombre;
     private String apellido;
-   private boolean esAdmin;
+    private boolean esAdmin;
     private String password;
+    private int puntaje;
 
     // Getters y setters
+
     public Long getId() {
         return id;
     }
@@ -55,4 +57,13 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    public void setPuntaje(int puntaje) {
+        this.puntaje = puntaje;
+    }
+
+    public int getPuntaje() {
+        return puntaje;
+    }
+
 }

@@ -1,9 +1,9 @@
 package com.example.api.services;
 
+import com.example.api.dto.UserScoreDTO;
 import com.example.api.models.User;
 import com.example.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,38 +15,22 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-  /*  @Autowired
-    private PasswordEncoder passwordEncoder;*/
-
-    // Listar todas las personas
+    // Listar todos los usuarios
     public List<User> getAllUsuarios() {
         return userRepository.findAll();
     }
 
-    // Buscar persona por ID
+    // Buscar usuario por ID
     public Optional<User> getUsuariosById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Crear nuevo usuario (con contraseña cifrada)
+    // Crear nuevo usuario
     public User createUsuarios(User user) {
         System.out.println("Creando usuario: " + user);
-        // Cifrar la contraseña antes de guardarla
+        // Cifrar la contraseña antes de guardarla si es necesario
         return userRepository.save(user);
     }
-
-    /*// Actualizar usuario
-    public Optional<User> updateUsuarios(Long id, User userDetails) {
-        return userRepository.findById(id).map(user -> {
-            user.setNombre(userDetails.getNombre());
-            user.setApellido(userDetails.getApellido());
-            if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-                // Actualizar la contraseña si se proporciona
-                user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-            }
-            return userRepository.save(user);
-        });
-    }*/
 
     // Eliminar un usuario
     public boolean deleteUsuario(Long id) {
@@ -56,15 +40,29 @@ public class UserService {
         }
         return false;
     }
+
     // Buscar un usuario por su nombre de usuario
     public User getUserByUsername(String username) {
-
         return userRepository.findByNombre(username).orElse(null); // Devuelve null si no encuentra el usuario
     }
 
-    /*// Autenticación del usuario
-    public Optional<User> autenticar(String nombre, String password) {
-        return userRepository.findByNombre(nombre)
-                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
-    }*/
+    // Actualizar el puntaje en usuarios
+    public Optional<User> actualizarPuntaje(Long userId, int nuevoPuntaje) {
+        return userRepository.findById(userId)
+                .map(existingUser -> {
+                    if (nuevoPuntaje > existingUser.getPuntaje()) {
+                        existingUser.setPuntaje(nuevoPuntaje);
+                        return userRepository.save(existingUser);
+                    }
+                    return existingUser; // No se actualiza si el nuevo puntaje es menor
+                });
+    }
+
+    public List<UserScoreDTO> getRanking() {
+        return userRepository.findAll().stream()
+                .filter(user -> !user.isEsAdmin()) // Filtrar usuarios que no son administradores
+                .map(user -> new UserScoreDTO(user.getNombre(), user.getPuntaje())) // Mapear a DTO
+                .sorted((u1, u2) -> Integer.compare(u2.getPuntaje(), u1.getPuntaje())) // Ordenar por puntaje descendente
+                .toList(); // Convertir a lista
+    }
 }
